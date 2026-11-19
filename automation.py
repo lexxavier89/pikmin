@@ -248,7 +248,7 @@ laptops_link = driver.find_element(By.LINK_TEXT, "Laptops")
 first_field = driver.find_element(By.ID, "field1")
 first_field.clear()
 time.sleep(1)
-first_field.send_keys("Esmiringhoy")
+first_field.send_keys("Hello Selenium")
 time.sleep(1)
 copy_button = driver.find_element(By.XPATH, "//button[text()='Copy Text']")
 ActionChains(driver).double_click(copy_button).perform()
@@ -279,9 +279,36 @@ if len(dropdown_items) > 0:
     time.sleep(1)
 
 # Labels and Links
-laptop_links = driver.find_elements(By.XPATH, "//a[text()='Apple' or text()='Lenovo' or text()='Dell']")
+laptop_link_names = ["Apple", "Lenovo", "Dell"]
+for link_name in laptop_link_names:
+    laptop_main_window = driver.current_window_handle
+    driver.find_element(By.LINK_TEXT, link_name).click()
+    time.sleep(3)
+    if len(driver.window_handles) > 1:
+        for window in driver.window_handles:
+            if window != laptop_main_window:
+                driver.switch_to.window(window)
+                driver.close()
+        driver.switch_to.window(laptop_main_window)
+    else:
+        driver.back()
+    time.sleep(2)
 
-broken_links = driver.find_elements(By.XPATH, "//a[contains(@href, 'deadlinkcity')]")
+# Broken Links
+error_codes = ["400", "401", "403", "404", "408", "500", "502", "503"]
+for error_code in error_codes:
+    error_main_window = driver.current_window_handle
+    driver.find_element(By.LINK_TEXT, "Errorcode " + error_code).click()
+    time.sleep(3)
+    if len(driver.window_handles) > 1:
+        for window in driver.window_handles:
+            if window != error_main_window:
+                driver.switch_to.window(window)
+                driver.close()
+        driver.switch_to.window(error_main_window)
+    else:
+        driver.back()
+    time.sleep(2)
 
 # Shadow DOM
 shadow_host = driver.find_element(By.ID, "shadow_host")
